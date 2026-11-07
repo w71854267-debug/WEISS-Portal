@@ -1,0 +1,273 @@
+
+
+<!DOCTYPE html>
+
+<html lang="ru">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>WEISS | Standoff 2</title>
+
+<style>
+
+*{box-sizing:border-box}
+
+body{margin:0;background:#080d0b;color:#f3fff5;font-family:Arial,sans-serif}
+
+header{padding:22px;background:#101a13;border-bottom:1px solid #285438}
+
+.logo{font-size:32px;font-weight:900;color:#8cff9b;letter-spacing:5px}
+
+nav{display:flex;gap:20px;flex-wrap:wrap;margin-top:18px}
+
+a{color:#9affaa;text-decoration:none}
+
+main{max-width:900px;margin:auto;padding:22px}
+
+.hero,.panel{background:#111b14;border:1px solid #285438;border-radius:18px;padding:24px;margin:18px 0}
+
+h1{font-size:38px}
+
+h2{color:#8cff9b}
+
+button{background:#8cff9b;color:#071009;border:0;border-radius:10px;padding:13px 18px;font-weight:bold;margin:5px;cursor:pointer}
+
+input{display:block;width:100%;padding:14px;margin:12px 0;border-radius:9px;border:1px solid #45634b;background:#080d0b;color:white}
+
+.item{padding:17px;margin:12px 0;background:#1a281d;border-radius:12px}
+
+.small{color:#a9b9ab;font-size:13px}
+
+.hidden{display:none}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<div class="logo">WEISS</div>
+
+<p>STANDOFF 2 COMMUNITY</p>
+
+<nav>
+
+<a href="#home">Главная</a>
+
+<a href="#shop">Магазин</a>
+
+<a href="#account">Регистрация</a>
+
+</nav>
+
+</header>
+
+<main>
+
+<section class="hero" id="home">
+
+<p class="small">WELCOME TO THE PORTAL</p>
+
+<h1>ТВОЯ ИГРА.<br>ТВОИ ПРАВИЛА.</h1>
+
+<p>Добро пожаловать в WEISS — игровой портал сообщества Standoff 2.</p>
+
+<a href="#account"><button>Создать аккаунт</button></a>
+
+</section>
+
+<section class="panel" id="account">
+
+<h2>АККАУНТ WEISS</h2>
+
+<div id="auth">
+
+<input id="nick" placeholder="Игровой ник">
+
+<input id="email" type="email" placeholder="Email">
+
+<input id="pass" type="password" placeholder="Пароль (минимум 8 символов)">
+
+<button onclick="register()">Регистрация</button>
+
+<button onclick="login()">Войти</button>
+
+</div>
+
+<div id="profile" class="hidden">
+
+<h3 id="welcome"></h3>
+
+<p>Баланс: <b id="balance">0</b> WEISS</p>
+
+<button onclick="bonus()">Ежедневный бонус +100</button>
+
+<button onclick="logout()">Выйти</button>
+
+</div>
+
+<p id="message" class="small"></p>
+
+<p class="small">Демонстрационная регистрация. Для настоящих аккаунтов нужен сервер.</p>
+
+</section>
+
+<section class="panel" id="shop">
+
+<h2>МАГАЗИН WEISS</h2>
+
+<div class="item">🔥 Starter Case — 100 WEISS</div>
+
+<div class="item">⚡ Fire Case — 250 WEISS</div>
+
+<div class="item">👑 Elite Case — 400 WEISS</div>
+
+<p class="small">Демонстрационные кейсы. Реальные предметы игры не выдаются.</p>
+
+</section>
+
+<section class="panel">
+
+<h2>О ПРОЕКТЕ</h2>
+
+<p>WEISS — независимый фанатский проект игрового сообщества.</p>
+
+<p class="small">Не связан с разработчиками Standoff 2.</p>
+
+</section>
+
+</main>
+
+<script>
+
+function msg(t){
+
+document.getElementById("message").textContent=t;
+
+}
+
+function show(){
+
+let user=localStorage.getItem("weiss_user");
+
+if(user){
+
+document.getElementById("auth").classList.add("hidden");
+
+document.getElementById("profile").classList.remove("hidden");
+
+document.getElementById("welcome").textContent="Привет, "+user+"!";
+
+document.getElementById("balance").textContent=localStorage.getItem("weiss_balance")||"0";
+
+}else{
+
+document.getElementById("auth").classList.remove("hidden");
+
+document.getElementById("profile").classList.add("hidden");
+
+}
+
+}
+
+function register(){
+
+let n=document.getElementById("nick").value.trim();
+
+let e=document.getElementById("email").value.trim();
+
+let p=document.getElementById("pass").value;
+
+if(!n||!e||p.length<8){
+
+msg("Заполни все поля. Пароль должен быть не короче 8 символов.");
+
+return;
+
+}
+
+if(localStorage.getItem("weiss_user")){
+
+msg("Демо-аккаунт уже создан на этом устройстве.");
+
+return;
+
+}
+
+localStorage.setItem("weiss_user",n);
+
+localStorage.setItem("weiss_email",e);
+
+localStorage.setItem("weiss_balance","0");
+
+show();
+
+msg("Демо-аккаунт создан!");
+
+}
+
+function login(){
+
+let e=document.getElementById("email").value.trim();
+
+if(e===localStorage.getItem("weiss_email")){
+
+show();
+
+msg("Вход в демо-аккаунт выполнен!");
+
+}else{
+
+msg("Демо-аккаунт с таким email не найден.");
+
+}
+
+}
+
+function bonus(){
+
+let today=new Date().toISOString().slice(0,10);
+
+if(localStorage.getItem("weiss_bonus")===today){
+
+msg("Бонус уже получен сегодня.");
+
+return;
+
+}
+
+localStorage.setItem("weiss_bonus",today);
+
+let b=Number(localStorage.getItem("weiss_balance")||0)+100;
+
+localStorage.setItem("weiss_balance",b);
+
+show();
+
+msg("Начислено 100 WEISS!");
+
+}
+
+function logout(){
+
+["weiss_user","weiss_email","weiss_balance","weiss_bonus"].forEach(k=>localStorage.removeItem(k));
+
+show();
+
+msg("Ты вышел из демо-аккаунта.");
+
+}
+
+show();
+
+</script>
+
+</body>
+
+</html>
